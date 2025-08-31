@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Form | E-Pass</title>
+  <link rel="stylesheet" href="style1.css" />
+</head>
+<body>
+  <div class="main-bg">
+    <div class="login-card">
+      <!-- Branding -->
+      <div class="brandlogo">
+  <center><img src="https://www.tnepass.tn.gov.in/static/media/tn_logo.224ef3e1e7f55749097a.png" alt="E-Pass Logo" /></center>
+</div>
+
+      <form id="epassForm">
+       <center> <h2 class="form-title">E-Pass Login</h2> </center>
+        <div class="input-row-inline">
+          <label for="vehicleNo">Vehicle No:/வாகன பதிவு எண்:</label>
+          <input type="text" id="vehicleNo" required />
+        </div>
+        <div class="input-row-inline">
+          <label for="mobileNo">Mobile No:/தொலைபேசி எண்:</label>
+          <input type="text" id="mobileNo" required />
+        </div>
+        <div class="input-row-inline">
+          <label for="aadhaarNo">Adhaar No:/ஆதார் பதிவு எண்:</label>
+          <input type="text" id="aadhaarNo" required />
+        </div>
+        <div class="input-row-inline">
+          <label for="place">Choose a place:</label>
+          <select name="place" id="place">
+            <option value="Coonoor">Coonoor</option>
+            <option value="Kodaikanal">Kodaikanal</option>
+            <option value="Kolli Hills">Kolli Hills</option>
+            <option value="Ooty">Ooty</option>
+            <option value="Yercaud">Yercaud</option>
+          </select>
+        </div>
+        <div class="input-row-inline">
+          <label for="in-date">In time:</label>
+          <input type="datetime-local" id="in-date" required />
+        </div>
+        <div class="input-row-inline">
+          <label for="out-date">Out time:</label>
+          <input type="datetime-local" id="out-date" required />
+        </div>
+        <button class="btn-main" type="submit">Submit/சமர்ப்பிக்க</button>
+      <!--  <div class="register-link">
+          <p>Don't have an account? <a href="#">Register</a></p>
+        </div> -->
+      </form>
+    </div>
+  </div>
+  <script>
+document.getElementById("epassForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const data = {
+    vehicleNo: document.getElementById("vehicleNo").value,
+    mobileNo: document.getElementById("mobileNo").value,
+    aadhaarNo: document.getElementById("aadhaarNo").value,
+    place: document.getElementById("place").value,
+    inDate: document.getElementById("in-date").value,
+    outDate: document.getElementById("out-date").value
+  };
+
+  try {
+    const response = await fetch("http://localhost:8080/api/epass/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create E-Pass");
+    }
+
+    const result = await response.json();
+    alert("✅ E-Pass Confirmed!\nPlace: " + result.place + 
+          "\nVehicle No: " + result.vehicleNo + 
+          "\nYour E-Pass ID: " + result.id);
+  } catch (error) {
+    alert("❌ Error: " + error.message);
+  }
+});
+</script>
+
+</body>
+</html>
